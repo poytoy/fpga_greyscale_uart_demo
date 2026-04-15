@@ -1,0 +1,21 @@
+# Vivado
+*.jou
+*.log
+*.str
+*.cache
+*.hw
+*.ip_user_files
+*.runs
+*.sim
+*.xpr
+*.bit
+*.ltx
+*.wdb
+*.wcfg
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store

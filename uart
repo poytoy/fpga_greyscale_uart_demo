@@ -1,0 +1,43 @@
+import serial
+
+# --- Settings ---
+PORT = '/dev/ttyUSB4'
+BAUDRATE = 115200
+IMG_SIZE = 256
+EXPECTED_BYTES = IMG_SIZE * IMG_SIZE * 2
+OUTPUT_FILE = "hardware_results.hex"
+
+def main():
+    try:
+        # 1. Initialize Serial
+        ser = serial.Serial(PORT, BAUDRATE, timeout=30)
+        print(f"Connected to {PORT}. Waiting for {EXPECTED_BYTES} bytes...")
+        print("ACTION REQUIRED: Press BTNC on the Nexys A7 now.")
+
+        # 2. Collect all raw bytes
+        raw_data = ser.read(EXPECTED_BYTES)
+        ser.close()
+
+        if len(raw_data) < EXPECTED_BYTES:
+            print(f"Error: Only received {len(raw_data)} bytes. Try again.")
+            return
+
+        # 3. Convert to 16-bit and write HEX (lowercase)
+        with open(OUTPUT_FILE, "w") as f:
+            for i in range(0, len(raw_data), 2):
+                high_byte = raw_data[i]
+                low_byte  = raw_data[i+1]
+
+                pixel_16bit = (high_byte << 8) | low_byte
+
+                # lowercase hex (important change)
+                f.write(f"{pixel_16bit:04x}\n")
+
+        print(f"Success! Data saved to {OUTPUT_FILE}")
+        print(f"Total pixels: {len(raw_data)//2}")
+
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
