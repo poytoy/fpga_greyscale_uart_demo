@@ -7,7 +7,6 @@
 *.ip_user_files
 *.runs
 *.sim
-*.xpr
 *.bit
 *.ltx
 *.wdb
